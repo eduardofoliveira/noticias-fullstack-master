@@ -1,19 +1,18 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const session = require('express-session')
-const User = require('./models/user')
 const bodyParser = require('body-parser')
+const User = require('./models/user')
+
 const app = express()
 const port = process.env.PORT || 80
 mongoose.Promise = global.Promise
-
 const mongo = process.env.MONGODB || 'mongodb://192.168.3.30/noticias'
 
 app.set('view engine', 'ejs')
 
 app.use(session({secret: 'fullstack-master', resave: false, saveUninitialized: true}))
 app.use(bodyParser.urlencoded({extended: true}))
-
 app.use(express.static('public'))
 
 require('./middleware/middleware').middleware(app)
@@ -30,8 +29,6 @@ const createInitialUser = async () => {
         })
         await user.save()
         console.log('Usuário administrador criado: \nUsuário: admin \nSenha: admin')
-    }else{
-        console.log('conta admin já existe')
     }
 }
 
