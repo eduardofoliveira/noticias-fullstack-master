@@ -11,20 +11,15 @@ const mongo = process.env.MONGODB || 'mongodb://192.168.3.30/noticias'
 
 app.set('view engine', 'ejs')
 
-app.use(session({secret: 'fullstack-master'}))
+app.use(session({secret: 'fullstack-master', resave: false, saveUninitialized: true}))
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.use(express.static('public'))
 
-app.use('/restrito', (req, res, next) => {
-    if('user' in  req.session){
-        return next()
-    }else{
-        res.redirect('/login')
-    }
-})
+require('./middleware/middleware').middleware(app)
 
 require('./routes/web').web(app)
+require('./routes/auth').auth(app)
 
 const createInitialUser = async () => {
     const total = await User.count({username: 'admin'})
