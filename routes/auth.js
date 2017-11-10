@@ -10,11 +10,16 @@ const auth = (app) => {
             const isValid = await user.checkPassword(req.body.senha)
             if(isValid){
                 req.session.user = user
-                res.redirect('/restrito/noticias')
+                res.redirect('/')
             }else{
                 res.redirect('/login')
             }
         }
+    })
+    app.get('/logout', (req, res) => {
+        req.session.destroy(() => {
+            res.redirect('/')
+        })
     })
 }
 
